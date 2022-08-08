@@ -4,6 +4,7 @@ const { login, createUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 const userRouter = require('./users');
 const movieRouter = require('./movies');
+const NotFoundErr = require('../errors/404-not-found-err');
 
 router.post('/signup', celebrate({
   body: Joi.object().keys({
@@ -22,5 +23,6 @@ router.post('/signin', celebrate({
 
 router.use('/users', auth, userRouter);
 router.use('/movies', auth, movieRouter);
+router.use((req, res, next) => next(new NotFoundErr('Страница не найдена')));
 
 module.exports = router;
