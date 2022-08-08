@@ -40,9 +40,9 @@ module.exports.createMovie = (req, res, next) => {
 
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.id)
-    .orFail(new NotFoundErr('Фльм не найден'))
+    .orFail(new NotFoundErr('Фильм не найден'))
     .then((movie) => {
-      if (req.user._id !== movie.owner._id.toString()) {
+      if (req.user._id !== movie.owner.toString()) {
         next(new ForbiddenErr('Нельзя удалить фильм другого пользователя'));
       } else {
         Movie.findByIdAndRemove(req.params.id)

@@ -7,5 +7,5 @@
 * Добавление и удаление карточек с фильмами
 
 Клиент: [cinemaclub.nomoredomains.sbs](https://cinemaclub.nomoredomains.sbs)
-Сервер: [api.cinemaclub.nomoredomains.sbs](https://api.cinemaclub.nomoredomains.sbs.nomoredomains.sbs)
+Сервер: [api.cinemaclub.nomoredomains.sbs](https://api.cinemaclub.nomoredomains.sbs)
 IP-адрес: 51.250.111.43
