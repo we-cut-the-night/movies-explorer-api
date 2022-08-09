@@ -10,11 +10,14 @@ const routes = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
 const { allowedCors } = require('./utils/cors');
+const { rateLimiter } = require('./utils/rateLimiter');
+const { MONGO_DEV } = require('./utils/constants');
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
+const { PORT = 3000, NODE_ENV, MONGO_PROD } = process.env;
+
+mongoose.connect(NODE_ENV === 'production' ? MONGO_PROD : MONGO_DEV);
 
 const app = express();
-const { PORT = 3000 } = process.env;
 
 app.use(helmet());
 app.use(bodyParser.json());
@@ -29,5 +32,6 @@ app.use(routes);
 app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
+app.use(rateLimiter);
 
 app.listen(PORT);

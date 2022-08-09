@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const { MSG_NEED_URL } = require('../utils/constants');
 
 const movieSchema = new mongoose.Schema({
-  movieId: { type: String, required: true },
+  movieId: { type: Number, required: true },
   nameRU: { type: String, required: true },
   nameEN: { type: String, required: true },
   country: { type: String, required: true },
@@ -17,7 +18,7 @@ const movieSchema = new mongoose.Schema({
       validator(v) {
         return validator.isURL(v);
       },
-      message: 'Необходимо указать ссылку',
+      message: MSG_NEED_URL,
     },
   },
   trailerLink: {
@@ -27,7 +28,7 @@ const movieSchema = new mongoose.Schema({
       validator(v) {
         return validator.isURL(v);
       },
-      message: 'Необходимо указать ссылку',
+      message: MSG_NEED_URL,
     },
   },
   thumbnail: {
@@ -37,7 +38,7 @@ const movieSchema = new mongoose.Schema({
       validator(v) {
         return validator.isURL(v);
       },
-      message: 'Необходимо указать ссылку',
+      message: MSG_NEED_URL,
     },
   },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true },

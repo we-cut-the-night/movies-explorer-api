@@ -1,10 +1,11 @@
 const Movie = require('../models/movie');
 const { handleError } = require('../utils/errors');
+const { MSG_MOVIE_NOT_FOUND, MSG_DEL_NOT_USERS_MOVIE } = require('../utils/constants');
 const NotFoundErr = require('../errors/404-not-found-err');
 const ForbiddenErr = require('../errors/403-forbidden-err');
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
+  Movie.find({ owner: req.user._id })
     .then((movies) => {
       res.send(movies);
     })
@@ -40,10 +41,10 @@ module.exports.createMovie = (req, res, next) => {
 
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.id)
-    .orFail(new NotFoundErr('Фильм не найден'))
+    .orFail(new NotFoundErr(MSG_MOVIE_NOT_FOUND))
     .then((movie) => {
       if (req.user._id !== movie.owner.toString()) {
-        next(new ForbiddenErr('Нельзя удалить фильм другого пользователя'));
+        next(new ForbiddenErr(MSG_DEL_NOT_USERS_MOVIE));
       } else {
         Movie.findByIdAndRemove(req.params.id)
           .then((removedMovie) => { res.send({ data: removedMovie }); })

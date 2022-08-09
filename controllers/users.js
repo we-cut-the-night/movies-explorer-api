@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { handleError } = require('../utils/errors');
+const { MSG_USER_EXISTS, MSG_AUTH_ERR, MSG_USER_NOT_FOUND } = require('../utils/constants');
 const AuthError = require('../errors/401-auth-err');
 const NotFoundErr = require('../errors/404-not-found-err');
 const ConflictErr = require('../errors/409-conflict-err');
@@ -14,7 +15,7 @@ module.exports.createUser = (req, res, next) => {
   User.findOne({ email })
     .then((oldUser) => {
       if (oldUser) {
-        next(new ConflictErr('Пользователь с таким email уже существует'));
+        next(new ConflictErr(MSG_USER_EXISTS));
       } else {
         bcrypt.hash(password, 10)
           .then((hash) => User.create({
@@ -35,12 +36,12 @@ module.exports.login = (req, res, next) => {
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        next(new AuthError('Некорректный email или пароль'));
+        next(new AuthError(MSG_AUTH_ERR));
       } else {
         bcrypt.compare(password, user.password)
           .then((matched) => {
             if (!matched) {
-              next(new AuthError('Некорректный email или пароль'));
+              next(new AuthError(MSG_AUTH_ERR));
             } else {
               const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
               res.send({ token });
@@ -54,7 +55,7 @@ module.exports.login = (req, res, next) => {
 
 module.exports.getMyUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(new NotFoundErr('Пользователь не найден'))
+    .orFail(new NotFoundErr(MSG_USER_NOT_FOUND))
     .then((user) => res.send(user))
     .catch((err) => handleError(res, err, next));
 };
