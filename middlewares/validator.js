@@ -1,5 +1,13 @@
+const validator = require('validator');
 const { celebrate, Joi } = require('celebrate');
-const { regex } = require('../utils/constants');
+const BadReqErr = require('../errors/400-bad-req-err');
+
+const checkUrlIsValid = (url) => {
+  if (validator.isURL(url)) {
+    return url;
+  }
+  throw new BadReqErr('Некорректный URL');
+};
 
 const validateSignup = celebrate({
   body: Joi.object().keys({
@@ -26,15 +34,15 @@ const validateCreateMovie = celebrate({
     director: Joi.string().required(),
     duration: Joi.number().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().regex(regex),
-    trailerLink: Joi.string().required().regex(regex),
-    thumbnail: Joi.string().required().regex(regex),
+    image: Joi.string().required().custom(checkUrlIsValid),
+    trailerLink: Joi.string().required().custom(checkUrlIsValid),
+    thumbnail: Joi.string().required().custom(checkUrlIsValid),
   }),
 });
 
 const validateDeleteMovie = celebrate({
   params: Joi.object().keys({
-    id: Joi.string().required().hex().length(24),
+    id: Joi.string().required(),
   }),
 });
 

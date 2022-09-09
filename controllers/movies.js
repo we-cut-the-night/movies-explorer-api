@@ -40,14 +40,14 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.id)
+  Movie.findOne({ movieId: req.params.id })
     .orFail(new NotFoundErr(MSG_MOVIE_NOT_FOUND))
     .then((movie) => {
       if (req.user._id !== movie.owner.toString()) {
         next(new ForbiddenErr(MSG_DEL_NOT_USERS_MOVIE));
       } else {
-        Movie.findByIdAndRemove(req.params.id)
-          .then((removedMovie) => { res.send({ data: removedMovie }); })
+        Movie.findOneAndRemove({ movieId: req.params.id })
+          .then((removedMovie) => { res.send(removedMovie); })
           .catch((err) => handleError(res, err, next));
       }
     })

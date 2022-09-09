@@ -17,13 +17,13 @@ module.exports = (req, res, next) => {
 
   try {
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
-    // payload = { _id: '62f2c71b02b9bd77c1e07ac6' };
   } catch (err) {
     next(new AuthError(MSG_NEED_AUTH));
     return;
   }
 
   req.user = payload;
+  // req.user = { _id: '62f2c6cd02b9bd77c1e07ac3' };
 
   next();
 };
