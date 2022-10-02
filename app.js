@@ -13,7 +13,7 @@ const { allowedCors } = require('./utils/cors');
 const { rateLimiter } = require('./utils/rateLimiter');
 const { MONGO_DEV } = require('./utils/constants');
 
-const { PORT = 3000, NODE_ENV, MONGO_PROD } = process.env;
+const { PORT = 3001, NODE_ENV, MONGO_PROD } = process.env;
 
 mongoose.connect(NODE_ENV === 'production' ? MONGO_PROD : MONGO_DEV);
 

@@ -3,7 +3,7 @@ const validator = require('validator');
 const { MSG_NEED_URL } = require('../utils/constants');
 
 const movieSchema = new mongoose.Schema({
-  movieId: { type: Number, required: true, unique: true },
+  movieId: { type: Number, required: true },
   nameRU: { type: String, required: true },
   nameEN: { type: String, required: true },
   country: { type: String, required: true },
